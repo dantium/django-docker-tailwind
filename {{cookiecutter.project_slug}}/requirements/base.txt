@@ -1,0 +1,12 @@
+django==2.2.6
+django-environ==0.4.5
+djangorestframework==3.10.3
+redis==3.3.8
+django-redis==4.10.0
+psycopg2==2.8.3
+gunicorn==19.9.0
+django-compressor==2.3
+{%- if cookiecutter.use_wagtail == 'y' %}
+wagtail==2.6.2
+{%- endif %}
+

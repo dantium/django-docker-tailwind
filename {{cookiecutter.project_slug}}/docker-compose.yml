@@ -1,0 +1,27 @@
+# Common docker config used in dev and production
+
+version: '3.6'
+services:
+  postgres:
+    image: "postgres:9.6.9-alpine"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups/:/backups
+    env_file:
+      - .env
+
+  django:
+    build:
+      target: dev_build
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    command: /start_dev
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

@@ -1,0 +1,21 @@
+# https://docs.docker.com/compose/extends/
+# Specific dev config
+
+version: '3.6'
+services:
+  django:
+    ports:
+      - "8000:8000"
+  node:
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    image: dev_node
+    depends_on:
+      - django
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - "3000:3000"

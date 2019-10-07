@@ -1,0 +1,4 @@
+#!/bin/bash
+export PATH=/usr/local/bin:$PATH
+docker-compose run node npm run build
+git add .
