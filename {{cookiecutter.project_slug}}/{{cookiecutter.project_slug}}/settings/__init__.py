@@ -1,7 +1,6 @@
 import os
 
-environment = getattr(os.environ, 'DJANGO_ENV', 'dev')
-
+environment = os.getenv('DJANGO_ENV', 'dev')
 if environment == 'dev':
     from .dev import *  # noqa F405
 else:

@@ -21,11 +21,14 @@ coverage.xml
 
 # Django stuff:
 *.log
-{{ cookiecutter.project_slug }}/media/
-
+media
+serve_static
 # environment
 .env
 
 # node
 node_modules/
+
+# other
+letsencrypt
 

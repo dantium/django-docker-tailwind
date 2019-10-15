@@ -5,5 +5,8 @@
     "author_name": "Dan Atkinson",
     "author_email": "dan@danatkinson.com",
     "timezone": "UTC",
-    "use_wagtail": "y"
+    "use_wagtail": "y",
+    "use_sentry": "y",
+    "use_gc_storage": "y",
+
 }

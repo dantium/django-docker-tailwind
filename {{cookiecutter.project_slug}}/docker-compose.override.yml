@@ -6,13 +6,17 @@ services:
   django:
     ports:
       - "8000:8000"
+    image: {{ cookiecutter.project_slug }}_dev_django
+    build:
+      args:
+        DJANGO_ENV: dev
+    command: /app/docker/django/start_dev
+    entrypoint: /app/docker/django/entrypoint
   node:
     build:
       context: .
       dockerfile: ./docker/node/Dockerfile
-    image: dev_node
-    depends_on:
-      - django
+    image: {{ cookiecutter.project_slug }}_dev_node
     volumes:
       - .:/app
       - /app/node_modules

@@ -1,0 +1,71 @@
+# Production docker
+
+version: '3.6'
+services:
+  django:
+    build:
+      target: production_build
+      args:
+          DJANGO_ENV: production
+    command: /start_production
+    ports:
+      - 8000:8000
+    labels:
+      #- traefik.backend=django
+      - traefik.enable=true
+      # redirect http - https
+      - traefik.http.routers.http.rule=Host(`www.{{cookiecutter.project_domain}}`)
+      - traefik.http.routers.http.entrypoints=http
+      - traefik.http.routers.http.middlewares=redirect
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.redirect.redirectscheme.permanent=true
+
+      - traefik.http.routers.django.rule=Host(`www.{{cookiecutter.project_domain}}`)
+      - traefik.http.routers.django.entrypoints=https
+      - traefik.http.routers.django.tls.certresolver=tlschallenge
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./serve_static/:/var/www/static/
+      - ./media/:/var/www/media/
+      - ./deploy/nginx/conf.d/:/etc/nginx/conf.d/
+
+    depends_on:
+      - django
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nginx.rule=Host(`media.{{cookiecutter.project_domain}}`)
+      - traefik.http.routers.nginx.entrypoints=https
+      - traefik.http.routers.nginx.tls.certresolver=tlschallenge
+
+  traefik:
+    image: traefik:v2.0
+    restart: always
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - "--providers.docker.exposedbydefault=false"
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--entrypoints.https.address=:443"
+      - "--entrypoints.http.address=:80"
+      - "--certificatesresolvers.tlschallenge.acme.tlschallenge=true"
+      #- "--certificatesresolvers.ssl.acme.httpchallenge.entrypoint=http"
+      #- "--certificatesresolvers.tlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.tlschallenge.acme.email={{cookiecutter.author_email}}"
+      - "--certificatesresolvers.tlschallenge.acme.storage=/letsencrypt/acme.json"
+
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./letsencrypt:/letsencrypt"
+
+    depends_on:
+      - django

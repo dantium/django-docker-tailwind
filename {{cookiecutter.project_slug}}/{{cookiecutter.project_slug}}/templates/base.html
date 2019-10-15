@@ -13,6 +13,15 @@
 {% block body %}{% endblock body %}
 {% include "includes/footer.html" %}{% endraw %}
 {% raw %}<script src="{% static 'js/main.js' %}" ></script>{% endraw %}
+
+{%- if cookiecutter.use_sentry == 'y' %}
+{% raw %}{% if SENTRY_DSN %}{% endraw %}
+<script src="https://browser.sentry-cdn.com/<VERSION>/bundle.min.js"></script>
+<script>
+Sentry.init({ dsn: '{% raw %}{{SENTRY_DSN}}{% endraw %}' });
+</script>
+{% raw %}{% endif %}{% endraw %}
+{%- endif %}
 </div>
 </body>
 </html>
