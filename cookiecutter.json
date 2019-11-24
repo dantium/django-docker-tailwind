@@ -7,6 +7,5 @@
     "timezone": "UTC",
     "use_wagtail": "y",
     "use_sentry": "y",
-    "use_gc_storage": "y",
-
+    "use_gc_storage": "y"
 }
