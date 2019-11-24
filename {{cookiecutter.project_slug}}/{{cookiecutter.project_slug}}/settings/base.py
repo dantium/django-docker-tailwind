@@ -98,7 +98,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = '{{cookiecutter.project_slug}}.wsgi.application'
+WSGI_APPLICATION = 'deploy.wsgi.application'
 
 
 # Database
