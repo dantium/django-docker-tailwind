@@ -1,4 +1,4 @@
-django==2.2.6
+django==2.2.8
 django-environ==0.4.5
 djangorestframework==3.10.3
 redis==3.3.8
